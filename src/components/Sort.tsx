@@ -9,17 +9,35 @@ import {
   MenubarMenu,
   MenubarTrigger,
 } from "./ui/menubar";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 const sortOptions = [
-  { name: "Most Popular", href: "#", current: true },
-  { name: "Best Rating", href: "#", current: false },
-  { name: "Newest", href: "#", current: false },
-  { name: "Price: Low to High", href: "#", current: false },
-  { name: "Price: High to Low", href: "#", current: false },
+  { name: "Ascending", filter: "popularity.asc", current: false },
+  { name: "Descending", filter: "popularity.desc", current: false },
+  { name: "Best Rating", filter: "vote_average.desc", current: false },
+  // { name: "Upcoming", href: "upcoming", current: false },
+  // { name: "Price: Low to High", href: "#", current: false },
+  // { name: "Price: High to Low", href: "#", current: false },
 ];
 
 const Sort = () => {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set(name, value);
+      // if (!params.has(name, value)) {
+      //   params.append(name, value);
+      // }
+      return params.toString();
+    },
+    [searchParams]
+  );
+
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   return (
     <>
@@ -41,8 +59,12 @@ const Sort = () => {
               <div className="py-1">
                 {sortOptions.map((option) => (
                   <MenubarItem key={option.name}>
-                    <a
-                      href={option.href}
+                    <Link
+                      href={
+                        pathname +
+                        "?" +
+                        createQueryString("sort_by", option.filter)
+                      }
                       className={cn(
                         option.current
                           ? "font-medium text-gray-900"
@@ -51,7 +73,7 @@ const Sort = () => {
                       )}
                     >
                       {option.name}
-                    </a>
+                    </Link>
                   </MenubarItem>
                 ))}
               </div>

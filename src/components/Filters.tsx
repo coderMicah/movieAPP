@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Collapsible,
   CollapsibleContent,
@@ -5,52 +7,130 @@ import {
 } from "./ui/collapsible";
 import { PlusIcon, MinusIcon } from "lucide-react";
 import { ScrollArea } from "./ui/scroll-area";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { MouseEvent, useCallback, useState } from "react";
 
-const filters = [
-  {
-    id: "genre",
-    name: "Genre",
-    options: [
-      { value: "action", label: "action", checked: false },
-      { value: "adventure", label: "adventure", checked: false },
-      { value: "animation", label: "animation", checked: true },
-      { value: "comedy", label: "comedy", checked: false },
-      { value: "crime", label: "crime", checked: false },
-      { value: "documentary", label: "documentary", checked: false },
-      { value: "drama", label: "drama", checked: false },
-      { value: "family", label: "family", checked: false },
-      { value: "fantasy", label: "fantasy", checked: true },
-      { value: "history", label: "history", checked: false },
-      { value: "music", label: "music", checked: false },
-      { value: "war", label: "war", checked: false },
-    ],
-  },
-  {
-    id: "certification",
-    name: "Certification",
-    options: [
-      { value: "U", label: "U", checked: false },
-      { value: "10", label: "10", checked: false },
-      { value: "12", label: "12", checked: false },
-      { value: "16", label: "16", checked: false },
-      { value: "18", label: "18", checked: true },
-    ],
-  },
 
-  {
-    id: "availabilities",
-    name: "Availabilities",
-    options: [
-      { value: "stream", label: "stream", checked: false },
-      { value: "free", label: "free", checked: false },
-      { value: "ads", label: "ads", checked: false },
-      { value: "rent", label: "rent", checked: false },
-      { value: "buy", label: "buy", checked: false },
-    ],
-  },
+const tvGenres = [
+  { value: 10759, label: "Action & Adventure", checked: false },
+  { value: 16, label: "Animation", checked: false },
+  { value: 35, label: "Comedy", checked: false },
+  { value: 80, label: "Crime", checked: false },
+  { value: 99, label: "Documentary", checked: false },
+  { value: 18, label: "Drama", checked: false },
+  { value: 10751, label: "Family", checked: false },
+  { value: 10762, label: "Kids", checked: false },
+  { value: 9648, label: "Mystery", checked: false },
+  { value: 10763, label: "News", checked: false },
+  { value: 10764, label: "Reality", checked: false },
+  { value: 10765, label: "Sci-Fi & Fantasy", checked: false },
+  { value: 10766, label: "Soap", checked: false },
+  { value: 10767, label: "Talk", checked: false },
+  { value: 10768, label: "War & Politics", checked: false },
+  { value: 37, label: "Western", checked: false },
 ];
 
+const movieGenres = [
+  { value: 28, label: "action", checked: false },
+  { value: 12, label: "Adventure", checked: false },
+  { value: 16, label: "Animation", checked: false },
+  { value: 35, label: "Comedy", checked: false },
+  { value: 80, label: "Crime", checked: false },
+  { value: 99, label: "Documentary", checked: false },
+  { value: 18, label: "Drama", checked: false },
+  { value: 10751, label: "Family", checked: false },
+  { value: 14, label: "Fantasy", checked: false },
+  { value: 36, label: "History", checked: false },
+  { value: 10402, label: "Music", checked: false },
+  { value: 10752, label: "War", checked: false },
+]
+
+
+
+
 const Filters = () => {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const [isChecked,setIsChecked] = useState(false);
+
+  const filters = [
+    {
+      id: "genre",
+      name: "Genre",
+      options: pathname.includes("movies") ? movieGenres : tvGenres
+    },
+    // {
+    //   id: "certification",
+    //   name: "Certification",
+    //   options: [
+    //     { value: "U", label: "U", checked: false },
+    //     { value: "10", label: "10", checked: false },
+    //     { value: "12", label: "12", checked: false },
+    //     { value: "16", label: "16", checked: false },
+    //     { value: "18", label: "18", checked: true },
+    //   ],
+    // },
+  
+    // {
+    //   id: "availabilities",
+    //   name: "Availabilities",
+    //   options: [
+    //     { value: "stream", label: "stream", checked: false },
+    //     { value: "free", label: "free", checked: false },
+    //     { value: "ads", label: "ads", checked: false },
+    //     { value: "rent", label: "rent", checked: false },
+    //     { value: "buy", label: "buy", checked: false },
+    //   ],
+    // },
+  ];
+
+
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams);
+
+      const existingValues = params.get(name);
+
+      if (existingValues) {
+        // If the key exists, append the new value (if not already present)
+        const valueArray = existingValues.split(",");
+        if (!valueArray.includes(value)) {
+          valueArray.push(value);
+        }
+        params.set(name, valueArray.join(","));
+      } else {
+        params.set(name, value);
+      }
+
+      return params.toString();
+    },
+    [searchParams]
+  );
+
+  function formatUrl(url: string) {
+    const [path, queryString] = url.split("?");
+    const params = new URLSearchParams(queryString);
+    const formattedParams = Array.from(params.entries())
+      .map(([key, value]) => `${key}=${decodeURIComponent(value)}`)
+      .join("&");
+    return `${path}?${formattedParams}`;
+  }
+
+  function handleInputClick(e: MouseEvent<HTMLInputElement>) {
+    e.preventDefault();
+    const inputValue = e.currentTarget.value;
+    const inputIsChecked = e.currentTarget.checked
+
+   setIsChecked(!inputIsChecked)
+
+    const queryString = createQueryString("with_genres", inputValue);
+    const path = formatUrl(`${pathname}?${queryString}`);
+    const formatedPath = formatUrl(path)
+    router.push(formatedPath);
+  }
+
   return (
     <div className="border-2 border-gray-50 h-full">
       <ScrollArea className="h-screen">
@@ -86,9 +166,10 @@ const Filters = () => {
                       <div key={option.value} className="flex items-center">
                         <input
                           defaultValue={option.value}
-                          defaultChecked={option.checked}
+                          // checked={option.checked}
                           id={`filter-${section.id}-${optionIdx}`}
                           name={`${section.id}[]`}
+                          onClick={handleInputClick}
                           type="checkbox"
                           className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                         />
