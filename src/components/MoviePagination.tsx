@@ -23,17 +23,8 @@ const MoviePagination = ({
   total_pages,
   total_results,
 }: IMoviePaginationProps) => {
-  //   let url = new URL("https://api.themoviedb.org/3/movie");
-  //   let params = new URLSearchParams();
-  //   params.append("page", "1");
+ 
 
-  console.log(
-    "Search Params",
-    total_pages,
-    // total_results,
-    page,
-    // total_results / total_pages
-  );
 
   const router = useRouter();
 
@@ -54,22 +45,7 @@ const MoviePagination = ({
     router.push(`?page=${i}`);
   };
 
-//   const renderPageNumbers = () => {
-//     const pageNumbers = [];
-//     for (let i = 1; i <= total_pages; i++) {
-//       pageNumbers.push(
-//         <button
-//           key={i}
-//           onClick={() => handlePageChange(i)}
-//           className={i === page ? "active" : ""}
-//           disabled={i === page}
-//         >
-//           {i}
-//         </button>
-//       );
-//     }
-//     return pageNumbers.slice(page,-3);
-//   };
+
 
   const renderPageNumbers = () => {
     const startPage = Math.max(page - 2, 1);
@@ -96,16 +72,21 @@ const MoviePagination = ({
     <div className={cn(className)}>
       <Pagination>
         <PaginationContent>
+
           <PaginationItem>
             <PaginationPrevious onClick={handlePrev} />
           </PaginationItem>
+
           {renderPageNumbers()}
+          
           <PaginationItem>
             <PaginationEllipsis />
           </PaginationItem>
+
           <PaginationItem>
             <PaginationNext onClick={handleNext} />
           </PaginationItem>
+
         </PaginationContent>
       </Pagination>
     </div>

@@ -1,3 +1,5 @@
+"use client";
+
 import { MenuIcon } from "lucide-react";
 import Link from "next/link";
 import { ReactNode } from "react";
@@ -11,6 +13,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "./ui/sheet";
+import { useScroll } from "@/hooks/useScroll";
 
 interface INavItems {
   name: string;
@@ -34,9 +37,21 @@ const NavItems: INavItems[] = [
 ];
 
 const Navbar = () => {
+  const scrolled = useScroll(64);
   return (
-    <header className="flex flex-wrap  md:justify-start md:flex-nowrap z-50 w-full bg-white border-b border-gray-200 dark:bg-neutral-800 dark:border-neutral-700">
-      <nav className="relative max-w-[85rem] w-full mx-auto md:flex md:items-center md:justify-between md:gap-3 py-2 px-4 sm:px-6 lg:px-8">
+    <header
+      className={cn(
+        "fixed top-0 h-16 flex flex-wrap md:justify-start md:flex-nowrap z-50 w-full bg-white border-b  dark:bg-neutral-800 transition-all ",
+        scrolled
+          ? "border-b border-gray-200 bg-white/50 backdrop-blur-xl"
+          : "bg-white/0"
+      )}
+    >
+      <nav
+        className={
+          "relative max-w-[85rem] w-full mx-auto md:flex md:items-center md:justify-between md:gap-4 py-2 px-4 sm:px-6 lg:px-8"
+        }
+      >
         <div className="flex justify-between items-center gap-x-1">
           {/* Logo */}
           <Logo />
@@ -73,7 +88,7 @@ export default Navbar;
 export const Logo = () => {
   return (
     <Link
-      className="py-4 flex-none font-semibold text-xl text-black focus:outline-none focus:opacity-80 dark:text-white"
+      className="flex-none font-semibold text-xl text-black focus:outline-none focus:opacity-80 dark:text-white"
       href="/"
       aria-label="Brand"
     >
@@ -84,7 +99,7 @@ export const Logo = () => {
 
 export const NavListItems = () => {
   return (
-    <div className={"gap-3 text-primary hidden md:flex"}>
+    <div className={"gap-8 text-primary hidden md:flex"}>
       {NavItems.map((item) => (
         <Link key={item.name} href={item.path}>
           {item.name}

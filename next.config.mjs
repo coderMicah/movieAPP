@@ -5,10 +5,11 @@ const nextConfig = {
             {
               protocol: 'https',
               hostname: 'image.tmdb.org',
-              
             }
           ],
-    }
+      
+    },
+    // basePath:'/movies'
 };
 
 export default nextConfig;
