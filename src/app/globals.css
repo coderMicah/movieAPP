@@ -66,4 +66,7 @@
   body {
     @apply bg-background text-foreground;
   }
+  .layoutContainer{
+    @apply max-w-[85rem] w-full mx-auto sm:px-6 lg:px-8 px-4
+  }
 }

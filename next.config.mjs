@@ -1,15 +1,18 @@
+// @ts-check
+import withPlaiceholder from "@plaiceholder/next";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    images:{
-        remotePatterns: [
-            {
-              protocol: 'https',
-              hostname: 'image.tmdb.org',
-            }
-          ],
-      
-    },
-    // basePath:'/movies'
+  transpilePackages: ["@plaiceholder/ui"],
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "image.tmdb.org",
+      },
+    ],
+  },
+  // basePath:'/movies'
 };
 
-export default nextConfig;
+export default withPlaiceholder(nextConfig);

@@ -37,22 +37,22 @@ const NavItems: INavItems[] = [
 ];
 
 const Navbar = () => {
-  const scrolled = useScroll(64);
+  const scrolled = useScroll(0);
   return (
     <header
       className={cn(
-        "fixed top-0 h-16 flex flex-wrap md:justify-start md:flex-nowrap z-50 w-full bg-white border-b  dark:bg-neutral-800 transition-all ",
+        "fixed top-0 z-50 flex h-16 w-full flex-wrap border-b bg-white transition-all dark:bg-neutral-800 md:flex-nowrap md:justify-start",
         scrolled
           ? "border-b border-gray-200 bg-white/50 backdrop-blur-xl"
-          : "bg-white/0"
+          : "bg-white/0",
       )}
     >
       <nav
         className={
-          "relative max-w-[85rem] w-full mx-auto md:flex md:items-center md:justify-between md:gap-4 py-2 px-4 sm:px-6 lg:px-8"
+          "layoutContainer relative py-2 md:flex md:items-center md:justify-between md:gap-4"
         }
       >
-        <div className="flex justify-between items-center gap-x-1">
+        <div className="flex items-center justify-between gap-x-1">
           {/* Logo */}
           <Logo />
 
@@ -88,7 +88,7 @@ export default Navbar;
 export const Logo = () => {
   return (
     <Link
-      className="flex-none font-semibold text-xl text-black focus:outline-none focus:opacity-80 dark:text-white"
+      className="flex-none text-xl font-semibold text-black focus:opacity-80 focus:outline-none dark:text-white"
       href="/"
       aria-label="Brand"
     >
@@ -99,7 +99,7 @@ export const Logo = () => {
 
 export const NavListItems = () => {
   return (
-    <div className={"gap-8 text-primary hidden md:flex"}>
+    <div className={"hidden gap-8 text-primary md:flex"}>
       {NavItems.map((item) => (
         <Link key={item.name} href={item.path}>
           {item.name}
