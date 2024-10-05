@@ -4,16 +4,16 @@ import Image from "next/image";
 import { buttonVariants } from "./ui/button";
 import { PlayIcon } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./ui/dialog";
-import { getTMDBVideos } from "@/lib/client";
+import {  getTMDBVideos } from "@/lib/client";
 import VideoPlayer from "./VideoPlayer";
 import { Suspense } from "react";
 
-const Movie = async (movieData: { movieData: IMovieData  }) => {
-  const movie = movieData.movieData;
-  const imagePath = generateTMDBImageUrl(movie.backdrop_path, "w780");
+const TVShow = async (showData: { showData: ITVShowData  }) => {
+  const show = showData.showData;
+  const imagePath = generateTMDBImageUrl(show.backdrop_path, "w780");
   const { base64 } = await getImage(imagePath);
 
-  const videos = await getTMDBVideos("movie",movie.id)
+  const videos = await getTMDBVideos("tv",show.id)
 
   const trailer = videos.results.filter(
     (video) => video.type === "Trailer" && video.site === "YouTube",
@@ -35,11 +35,11 @@ const Movie = async (movieData: { movieData: IMovieData  }) => {
         </div>
 
         <div className="layoutContainer absolute top-[50%] z-20 mx-auto flex w-full max-w-[85rem] translate-y-[-50%] flex-col items-start space-y-3 text-white md:space-y-6">
-          <h2 className="text-2xl capitalize md:text-4xl">{movie.title}</h2>
+          <h2 className="text-2xl capitalize md:text-4xl">{show.name}</h2>
 
           <div className="flex">
-            {movie.genres.map((genre, index) => {
-              const showSeparator = index < movie.genres.length - 1;
+            {show.genres.map((genre, index) => {
+              const showSeparator = index < show.genres.length - 1;
               return (
                 <p className="text-xs md:text-sm" key={genre?.id}>
                   <span>{genre?.name}</span>
@@ -50,7 +50,7 @@ const Movie = async (movieData: { movieData: IMovieData  }) => {
           </div>
 
           <div className="md:w-1/2">
-            <p className="text-sm md:text-base">{movie.overview}</p>
+            <p className="text-sm md:text-base">{show.overview}</p>
           </div>
 
           {trailer && (
@@ -82,4 +82,4 @@ const Movie = async (movieData: { movieData: IMovieData  }) => {
   );
 };
 
-export default Movie;
+export default TVShow;

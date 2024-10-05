@@ -1,7 +1,7 @@
 import Filters from "@/components/Filters";
-import MoviePagination from "@/components/MoviePagination";
 import Movies from "@/components/Movies";
-import { getData } from "@/lib/client";
+import {  getTMDBList } from "@/lib/client";
+import DataPagination from "@/components/DataPagination";
 
 const MoviesPage = async ({
   searchParams,
@@ -17,7 +17,7 @@ const MoviesPage = async ({
   sP.append("sort_by", sort_by);
   sP.append("with_genres", with_genres);
 
-  const data = await getData<IMovie>("movie", sP);
+  const data = await getTMDBList<IMovie>("movie", sP);
 
   return (
     <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4 mt-16">
@@ -29,7 +29,7 @@ const MoviesPage = async ({
       {/* Movies */}
       <div className="lg:col-span-3 sm:px-6">
         <Movies movies={data.results} />
-        <MoviePagination
+        <DataPagination
           className={"mb-10"}
           page={data.page}
           total_pages={data.total_pages}

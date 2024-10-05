@@ -11,18 +11,18 @@ import {
 } from "./ui/pagination";
 import { useRouter, useSearchParams } from "next/navigation";
 
-interface IMoviePaginationProps {
+interface IDataPaginationProps {
   page: number;
   className?: string;
   total_pages: number;
   total_results: number;
 }
-const MoviePagination = ({
+const DataPagination = ({
   className,
   page,
   total_pages,
   total_results,
-}: IMoviePaginationProps) => {
+}: IDataPaginationProps) => {
  
 
 
@@ -93,4 +93,4 @@ const MoviePagination = ({
   );
 };
 
-export default MoviePagination;
+export default DataPagination;

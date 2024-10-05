@@ -1,7 +1,7 @@
 import Filters from "@/components/Filters";
-import MoviePagination from "@/components/MoviePagination";
 import TVShows from "@/components/TVShows";
-import { getData } from "@/lib/client";
+import { getTMDBList } from "@/lib/client";
+import DataPagination from "@/components/DataPagination";
 
 const SeriesPage = async ({
   searchParams,
@@ -17,19 +17,19 @@ const SeriesPage = async ({
   sP.append("sort_by", sort_by);
   sP.append("with_genres", with_genres);
 
-  const data = await getData<ITVShow>("tv", sP);
+  const data = await getTMDBList<ITVShow>("tv", sP);
 
   return (
-    <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4 mt-16">
+    <div className="mt-16 grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
       {/* Sidebar */}
       <aside>
         <Filters />
       </aside>
 
       {/* Movies */}
-      <div className="lg:col-span-3 sm:px-6">
+      <div className="sm:px-6 lg:col-span-3">
         <TVShows shows={data.results} />
-        <MoviePagination
+        <DataPagination
           className={"mb-10"}
           page={data.page}
           total_pages={data.total_pages}
